@@ -6,6 +6,7 @@ Rectangle {
     width: 600
     height: 350
     ListView {
+        id: rootView
         anchors.fill: parent
         delegate: groupsDelegate
         model: listModel
@@ -49,6 +50,8 @@ Rectangle {
                             }
                         }
                         ListView {
+                            id: childView
+                            height: 100
                             anchors.right: parent.right
                             visible: mainRow.expanded
                             model: elements
@@ -81,7 +84,8 @@ Rectangle {
                             }
                         ]
                     },
-                    ListElement {group: "second3"; elements: []}
+                    ListElement {group: "second3"; elements: []},
+                    ListElement {group: "second4"; elements: []}
                 ]
             }
             ListElement {group: "third"; elements: []}
