@@ -2,70 +2,85 @@ import QtQuick 2.2
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 
-Rectangle {
-    width: 600
-    height: 350
+Item {
+    id: root
+    width: 600 // change to parent.width
+    height: 500// change to parent.height
+
     ListView {
         id: rootView
         anchors.fill: parent
         delegate: groupsDelegate
         model: listModel
+        highlight: Rectangle {color: "lightsteelblue"; radius: 6}
+//        focus: true
 
         Component {
             id: groupsDelegate
 
             Item {
-                width: 150
-                height: mainRow.childrenRect.height
+                id: container
+                width: 200
+                height: childrenRect.height
 
-                RowLayout {
-                    anchors.fill: parent
-                    id: mainRow
-                    property bool expanded: false
-                    Column {
-                        anchors.leftMargin: 10
-                        id: mainColumn
-                        Row {
-                            spacing: 2
-                            Image {
-                                id: expander
-                                source: "expander.png"
-                                rotation: mainRow.expanded ? 90 : 0
-                                opacity: elements.count === 0 ? 0 : 1
-                                Behavior on rotation {
-                                    NumberAnimation {duration: 110}
-                                }
+                Column {
+                    x: 14
+                    id: mainColumn
 
-                                MouseArea {
-                                    visible: expander.opacity === 1 ? true : false
-                                    id: expanderMouseArea
-                                    anchors.fill: parent
-                                    onClicked: mainRow.expanded = !mainRow.expanded
-                                }
+                    Row {
+                        id: mainRow
+                        spacing: 3
+                        property bool expanded: false
+
+                        Image {
+                            id: expander
+                            source: "expander.png"
+                            rotation: mainRow.expanded ? 90 : 0
+                            opacity: elements.count === 0 ? 0 : 1
+                            Behavior on rotation {
+                                NumberAnimation {duration: 110}
                             }
 
-                            Text {
-                                id: name
-                                text: group
+                            MouseArea {
+                                visible: expander.opacity === 1 ? true : false
+                                id: expanderMouseArea
+                                anchors.fill: parent
+                                onClicked: {
+                                    mainRow.expanded = !mainRow.expanded
+                                    console.log(container.height)
+                                }
                             }
                         }
-                        ListView {
-                            id: childView
-                            height: 100
-                            anchors.right: parent.right
-                            visible: mainRow.expanded
-                            model: elements
-                            delegate: groupsDelegate
+
+                        Text {
+                            id: name
+                            text: group
                         }
                     }
 
-                    //                                        ListView {
-                    //                                            anchors.right: parent.right
-                    //                                            visible: mainRow.expanded
-                    //                                            model: elements
-                    //                                            delegate: groupsDelegate
-                    //                                        }
+                    Item {
+                        width: 200
+                        height: elements.count === 0 ? 0 : elements.count * mainRow.height
+                        visible: mainRow.expanded
+
+                        ListView {
+                            id: childView
+                            anchors.fill: parent
+//                            visible: mainRow.expanded
+                            model: elements
+                            delegate: groupsDelegate
+                            highlight: Rectangle {color: "lightsteelblue"; radius: 5}
+                            focus: true
+                        }
+                    }
                 }
+
+                //                                        ListView {
+                //                                            anchors.right: parent.right
+                //                                            visible: mainRow.expanded
+                //                                            model: elements
+                //                                            delegate: groupsDelegate
+                //                                        }
             }
         }
 
