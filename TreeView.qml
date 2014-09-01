@@ -60,7 +60,7 @@ Item {
 
                     Item {
                         width: 200
-                        height: elements.count === 0 ? 0 : elements.count * mainRow.height
+                        height: childView.contentHeight
                         visible: mainRow.expanded
 
                         ListView {
